@@ -1,0 +1,330 @@
+/* ============================================================
+   PROFILE — premium account experience.
+   Two cohesive appearances driven by ONE attribute on the shell:
+     .profile-shell                      → Noir (dark, default, matches the app)
+     .profile-shell[data-appearance=light] → Ivory (light)
+   Everything is driven by scoped CSS variables + the profile's own classes so
+   the light theme is self-contained and never fights luxury.css's global
+   dark !important remaps (a true app-wide light mode would require reworking
+   luxury.css and is intentionally out of scope — see the picker/README notes).
+   ============================================================ */
+
+.profile-shell {
+  /* ---- Noir (dark) tokens ---- */
+  --p-page: transparent;            /* let the app's noir canvas show through */
+  --p-text: #f5f1e8;
+  --p-text-2: #c4cad8;
+  --p-muted: #9aa3bb;
+  --p-card-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.005)),
+    linear-gradient(180deg, rgba(19, 24, 41, 0.92), rgba(10, 13, 24, 0.92));
+  --p-card-border: rgba(201, 169, 97, 0.18);
+  --p-card-border-strong: rgba(201, 169, 97, 0.5);
+  --p-card-shadow: 0 18px 50px -22px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --p-field-bg: rgba(255, 255, 255, 0.025);
+  --p-field-border: rgba(201, 169, 97, 0.2);
+  --p-field-text: #e8e3d6;
+  --p-readonly-bg: rgba(255, 255, 255, 0.02);
+  --p-readonly-border: rgba(201, 169, 97, 0.12);
+  --p-gold: #c9a961;
+  --p-gold-strong: #e3d2a2;
+  --p-hairline: rgba(201, 169, 97, 0.12);
+  --p-bar-bg: rgba(10, 13, 24, 0.92);
+  /* Semantic stat colors (dark values) */
+  --p-stat-found: #34b894;
+  --p-stat-resolved: #14a37f;
+  --p-stat-lost: #c4596d;
+
+  min-height: calc(100vh - 4rem);
+  background: var(--p-page);
+  color: var(--p-text);
+}
+
+.profile-shell[data-appearance='light'] {
+  /* ---- Ivory (light) tokens ---- */
+  --p-page: #f1ede3;
+  --p-text: #1a2034;
+  --p-text-2: #353d57;
+  --p-muted: #5b6478;
+  --p-card-bg: #ffffff;
+  --p-card-border: rgba(20, 30, 60, 0.1);
+  --p-card-border-strong: rgba(184, 146, 63, 0.55);
+  --p-card-shadow: 0 18px 44px -26px rgba(30, 40, 70, 0.3), 0 2px 6px -2px rgba(30, 40, 70, 0.08);
+  --p-field-bg: #ffffff;
+  --p-field-border: rgba(20, 30, 60, 0.16);
+  --p-field-text: #1a2034;
+  --p-readonly-bg: #f6f3ec;
+  --p-readonly-border: rgba(20, 30, 60, 0.08);
+  --p-gold: #8b6914;
+  --p-gold-strong: #b8923f;
+  --p-hairline: rgba(20, 30, 60, 0.08);
+  --p-bar-bg: rgba(255, 255, 255, 0.94);
+  /* Darkened greens/red that meet AA contrast on the ivory cards */
+  --p-stat-found: #0a7d5a;
+  --p-stat-resolved: #0a6b4f;
+  --p-stat-lost: #a8273f;
+  background:
+    radial-gradient(1000px 520px at 100% 0%, rgba(201, 169, 97, 0.1), transparent 60%),
+    radial-gradient(900px 500px at -5% 0%, rgba(43, 81, 116, 0.06), transparent 60%),
+    var(--p-page);
+}
+
+/* ---- Cards ---- */
+.profile-card {
+  position: relative;
+  background: var(--p-card-bg);
+  border: 1px solid var(--p-card-border);
+  border-radius: 1rem;
+  box-shadow: var(--p-card-shadow);
+  color: var(--p-text);
+  backdrop-filter: blur(14px);
+  transition: border-color 0.3s var(--ease-premium, ease), box-shadow 0.3s var(--ease-premium, ease), transform 0.3s var(--ease-premium, ease);
+}
+@media (min-width: 1024px) {
+  .profile-card.is-hover:hover {
+    transform: translateY(-2px);
+    border-color: var(--p-card-border-strong);
+  }
+}
+
+/* ---- Typography helpers ---- */
+.profile-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--p-muted);
+}
+.profile-title {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 700;
+  color: var(--p-text);
+  letter-spacing: -0.01em;
+}
+.profile-text-2 { color: var(--p-text-2); }
+.profile-muted { color: var(--p-muted); }
+.profile-gold { color: var(--p-gold); }
+.profile-hairline { border-color: var(--p-hairline); }
+
+/* ---- Fields ---- */
+.profile-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--p-text-2);
+  margin-bottom: 0.4rem;
+}
+.profile-input,
+.profile-textarea {
+  width: 100%;
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.92rem;
+}
+.profile-readonly {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--p-readonly-bg);
+  border: 1px solid var(--p-readonly-border);
+  color: var(--p-text);
+}
+.profile-help { font-size: 0.72rem; color: var(--p-muted); margin-top: 0.35rem; }
+
+/* Universal light-theme field override — beats luxury.css's global !important
+   input rule (higher specificity via the :not() chain + the shell prefix) so
+   ALL inputs inside the light profile (incl. the LocationPicker) go light. */
+.profile-shell[data-appearance='light'] input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+.profile-shell[data-appearance='light'] textarea,
+.profile-shell[data-appearance='light'] select {
+  background-color: var(--p-field-bg) !important;
+  color: var(--p-field-text) !important;
+  border-color: var(--p-field-border) !important;
+}
+.profile-shell[data-appearance='light'] input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file'])::placeholder,
+.profile-shell[data-appearance='light'] textarea::placeholder {
+  color: #9298a8 !important;
+}
+.profile-shell[data-appearance='light'] input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):focus,
+.profile-shell[data-appearance='light'] textarea:focus,
+.profile-shell[data-appearance='light'] select:focus {
+  background-color: #fff !important;
+  border-color: var(--p-gold-strong) !important;
+  box-shadow: 0 0 0 4px rgba(184, 146, 63, 0.18) !important;
+}
+
+/* ---- Hero band ---- */
+.profile-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid var(--p-card-border);
+  background:
+    radial-gradient(900px 360px at 100% -20%, rgba(201, 169, 97, 0.16), transparent 60%),
+    radial-gradient(700px 360px at 0% 120%, rgba(43, 81, 116, 0.18), transparent 60%),
+    var(--p-card-bg);
+  box-shadow: var(--p-card-shadow);
+}
+.profile-hero::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--p-gold-strong) 30%, #f0e5c8 50%, var(--p-gold-strong) 70%, transparent);
+  opacity: 0.7;
+}
+
+/* ---- Avatar ---- */
+.profile-avatar {
+  position: relative;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background-image: linear-gradient(135deg, #8b6914, #c9a961 55%, #e3d2a2);
+  color: #0a0d18;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display, sans-serif);
+  font-weight: 800;
+  box-shadow: 0 12px 30px -12px rgba(201, 169, 97, 0.5);
+}
+
+/* ---- Stat tiles ---- */
+.profile-stat {
+  border-radius: 0.9rem;
+  padding: 1.1rem;
+  text-align: center;
+  background: var(--p-card-bg);
+  border: 1px solid var(--p-card-border);
+  box-shadow: var(--p-card-shadow);
+}
+.profile-stat__num { font-family: var(--font-display, sans-serif); font-weight: 800; font-size: 1.65rem; line-height: 1; }
+.profile-stat__label { font-size: 0.72rem; color: var(--p-muted); margin-top: 0.35rem; }
+
+/* ---- Verification rows ---- */
+.profile-verify-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--p-hairline);
+}
+.profile-verify-item:last-child { border-bottom: none; }
+.profile-verify-ic {
+  width: 2.1rem; height: 2.1rem; flex: none;
+  border-radius: 0.6rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.profile-verify-ic.ok { background: rgba(20, 163, 127, 0.14); color: #14a37f; }
+.profile-verify-ic.pending { background: rgba(201, 169, 97, 0.14); color: var(--p-gold); }
+
+/* ---- Completion ring ---- */
+.profile-ring {
+  --pct: 0;
+  position: relative;
+  width: 4.5rem; height: 4.5rem; flex: none;
+  border-radius: 9999px;
+  background: conic-gradient(var(--p-gold-strong) calc(var(--pct) * 1%), var(--p-hairline) 0);
+  display: flex; align-items: center; justify-content: center;
+}
+.profile-ring::before {
+  content: ''; position: absolute; inset: 0; margin: auto;
+  width: 3.4rem; height: 3.4rem; border-radius: 9999px;
+  background: var(--p-card-bg);
+}
+.profile-ring > span { position: relative; font-family: var(--font-display, sans-serif); font-weight: 800; font-size: 1rem; color: var(--p-text); }
+
+/* ---- Appearance toggle ---- */
+.profile-appearance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: var(--p-readonly-bg);
+  border: 1px solid var(--p-card-border);
+}
+.profile-appearance button {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: 9999px;
+  color: var(--p-muted);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.profile-appearance button[aria-pressed='true'] {
+  background: var(--p-gold);
+  color: #0a0d18;
+}
+.profile-shell[data-appearance='light'] .profile-appearance button[aria-pressed='true'] { color: #fff; }
+
+/* ---- Sticky save bar ---- */
+.profile-savebar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 60;
+  background: var(--p-bar-bg);
+  backdrop-filter: blur(16px) saturate(150%);
+  border-top: 1px solid var(--p-card-border);
+  box-shadow: 0 -12px 34px -18px rgba(0, 0, 0, 0.6);
+  animation: profile-rise 0.32s var(--ease-premium, ease-out);
+}
+@keyframes profile-rise { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+/* ---- Light overrides for the LocationPicker chrome ---- */
+.profile-shell[data-appearance='light'] .lp-map {
+  border-color: rgba(20, 30, 60, 0.12);
+  box-shadow: 0 18px 44px -28px rgba(30, 40, 70, 0.35);
+  background: #e9e6dd;
+}
+.profile-shell[data-appearance='light'] .lp-map .leaflet-tile-pane { filter: none; }
+.profile-shell[data-appearance='light'] .lp-preview {
+  background: #fff;
+  border-color: rgba(20, 30, 60, 0.1);
+}
+.profile-shell[data-appearance='light'] .lp-preview .text-ink-100 { color: #1a2034 !important; }
+.profile-shell[data-appearance='light'] .lp-preview .text-ink-300 { color: #5b6478 !important; }
+.profile-shell[data-appearance='light'] .lp-suggest {
+  background: #fff;
+  border-color: rgba(20, 30, 60, 0.12);
+}
+.profile-shell[data-appearance='light'] .lp-suggest__item { color: #353d57; }
+.profile-shell[data-appearance='light'] .lp-suggest__item:hover,
+.profile-shell[data-appearance='light'] .lp-suggest__item[aria-selected='true'] {
+  background: rgba(184, 146, 63, 0.14); color: #1a2034;
+}
+.profile-shell[data-appearance='light'] .lp-map .leaflet-control-zoom a,
+.profile-shell[data-appearance='light'] .lp-map .leaflet-bar a {
+  background: #fff; color: #8b6914; border-color: rgba(20, 30, 60, 0.14);
+}
+
+/* ---- Light overrides for status pills (dark-glass colors fail on white) ---- */
+.profile-shell[data-appearance='light'] .pill-success { background: rgba(20, 163, 127, 0.14); color: #0a6b4f; border-color: rgba(20, 163, 127, 0.4); }
+.profile-shell[data-appearance='light'] .pill-warning { background: rgba(184, 146, 63, 0.16); color: #785708; border-color: rgba(184, 146, 63, 0.45); }
+.profile-shell[data-appearance='light'] .pill-danger { background: rgba(168, 50, 70, 0.12); color: #7c2d3a; border-color: rgba(168, 50, 70, 0.4); }
+.profile-shell[data-appearance='light'] .pill-info { background: rgba(43, 81, 116, 0.12); color: #1d3358; border-color: rgba(43, 81, 116, 0.4); }
+.profile-shell[data-appearance='light'] .pill-brand { background: rgba(184, 146, 63, 0.14); color: #785708; border-color: rgba(184, 146, 63, 0.4); }
+
+/* ---- Light overrides for the LocationPicker status banners ---- */
+.profile-shell[data-appearance='light'] .lp-status--loading { background: rgba(43, 81, 116, 0.1); color: #1d3358; border-color: rgba(43, 81, 116, 0.3); }
+.profile-shell[data-appearance='light'] .lp-status--success { background: rgba(20, 163, 127, 0.12); color: #0a6b4f; border-color: rgba(20, 163, 127, 0.35); }
+.profile-shell[data-appearance='light'] .lp-status--error { background: rgba(168, 50, 70, 0.1); color: #7c2d3a; border-color: rgba(168, 50, 70, 0.35); }
+
+/* ---- Light overrides for raw ink-* utilities + ghost buttons ----
+   The ink scale is a fixed (dark-oriented) palette; on ivory the lighter steps
+   fail contrast, so remap them to dark ink within the light profile. */
+.profile-shell[data-appearance='light'] .text-ink-50,
+.profile-shell[data-appearance='light'] .text-ink-100 { color: #1a2034 !important; }
+.profile-shell[data-appearance='light'] .text-ink-200 { color: #353d57 !important; }
+.profile-shell[data-appearance='light'] .text-ink-300 { color: #5b6478 !important; }
+.profile-shell[data-appearance='light'] .text-ink-400 { color: #6a7286 !important; }
+.profile-shell[data-appearance='light'] .btn-ghost {
+  color: #785708;
+  background: rgba(184, 146, 63, 0.06);
+  border-color: rgba(184, 146, 63, 0.45);
+}
+.profile-shell[data-appearance='light'] .btn-ghost:hover {
+  background: rgba(184, 146, 63, 0.12);
+  color: #5d4509;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-card, .profile-savebar { transition: none; animation: none; }
+}
